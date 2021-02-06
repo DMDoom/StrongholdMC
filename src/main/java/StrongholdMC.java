@@ -10,6 +10,7 @@ import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -17,6 +18,7 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
     private TextField secondThrowInputEye;
 
     private Text resultText;
+    private Text resultCertaintyDeg;
 
     private boolean pressedF3;
 
@@ -58,12 +61,10 @@ public class StrongholdMC extends Application implements NativeKeyListener {
 
 
         // Loading resources
-        FileInputStream inputStream;
-        inputStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\bg2.png");
-        FileInputStream fontStream;
-        fontStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
-        FileInputStream hateFX;
-        hateFX = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
+        FileInputStream inputStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\bg2.png");
+        FileInputStream fontStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
+        FileInputStream strongholdStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
+        FileInputStream degreeStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
 
 
         // Creating Pane and setting background
@@ -76,7 +77,8 @@ public class StrongholdMC extends Application implements NativeKeyListener {
 
         // Initializing fields
         Font bgFont = Font.loadFont(fontStream, 24);
-        Font coordFont = Font.loadFont(hateFX, 40);
+        Font coordFont = Font.loadFont(strongholdStream, 40);
+        Font degreeCert = Font.loadFont(degreeStream, 24);
 
         Text firstThrowText = new Text("First throw and pearl XZ");
         firstThrowText.setFont(bgFont);
@@ -114,6 +116,13 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         resultTextFlow.getChildren().add(resultText);
         resultTextFlow.setTextAlignment(TextAlignment.CENTER);
 
+        resultCertaintyDeg = new Text("");
+        resultCertaintyDeg.setFont(degreeCert);
+        resultCertaintyDeg.setFill(Color.WHITESMOKE);
+        TextFlow resultCertaintyDegFlow = new TextFlow();
+        resultCertaintyDegFlow.getChildren().add(resultCertaintyDeg);
+        resultCertaintyDegFlow.setTextAlignment(TextAlignment.CENTER);
+
 
         // Initializing and adding to container
         VBox vbox1 = new VBox();
@@ -124,6 +133,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         vbox1.getChildren().add(textFlowSecond);
         vbox1.getChildren().add(secondData);
         vbox1.getChildren().add(resultTextFlow);
+        vbox1.getChildren().add(resultCertaintyDegFlow);
         vbox1.setAlignment(Pos.TOP_CENTER);
 
 
@@ -202,6 +212,9 @@ public class StrongholdMC extends Application implements NativeKeyListener {
 
                             double[] strongholdLocation = calculator.calculateStronghold(firstData, firstDataEye, secondData, secondDataEye);
                             resultText.setText(strongholdLocation[0] + " 0 " + strongholdLocation[1]);
+
+                            int resultDeg = (int) Math.round(strongholdLocation[2]);
+                            resultCertaintyDeg.setText("" + resultDeg + " degrees");
 
                             for (TextField placeholder : textFields) {
                                 placeholder.setText("");

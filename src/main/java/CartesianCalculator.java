@@ -1,14 +1,28 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 
 public class CartesianCalculator {
 
-    // For future improvements (currently impossible)
+    //For future improvements (currently impossible)
     //Cartesian angle = Minecraft angle + 90 degrees
     //x3 = ((z1 - z2) + x2tan(θ2) - x1tan(θ1)) / (tan(θ2) - tan(θ1))
     //z3 = ((z1tan(θ2) - z2tan(θ1)) + (x2 - x1) * tan(θ2) * tan(θ1)) / (tan(θ2) - tan(θ1))
     //The variables x1, z1, and θ1 are the X, Z, and cartesian angle for point 1, and x2, z2, and θ2 are the same for point 2.
     //We are looking for point (x3, z3). Make sure you calculator is using degrees, not radians!
+
+    public static double calculateDegreeCertainty(double firstSlope, double secondSlope) {
+        double top = firstSlope - secondSlope;
+        double bottom = 1 + (firstSlope * secondSlope);
+        double toCalc = top / bottom;
+
+        double result = Math.atan(toCalc);
+        result = Math.toDegrees(result);
+        result = Math.abs(result);
+        double roundedFinal = round(result, 2);
+
+        return roundedFinal;
+    }
 
     // Calculate all
     public static double[] calculateStronghold (String firstThrow, String firstThrowEye, String secondThrow, String secondThrowEye) {
@@ -26,13 +40,18 @@ public class CartesianCalculator {
         double secondThrowEyeX = Double.valueOf(secondThrowDataEye[0]);
         double secondThrowEyeZ = Double.valueOf(secondThrowDataEye[1]);
 
-        // Calculating
+        // Calculating line data
         double firstThrowSlope = calculateSlope(firstThrowX, firstThrowZ, firstThrowEyeX, firstThrowEyeZ);
         double secondThrowSlope = calculateSlope(secondThrowX, secondThrowZ, secondThrowEyeX, secondThrowEyeZ);
         double firstThrowIntercept = calculateIntercept(firstThrowX, firstThrowZ, firstThrowSlope);
         double secondThrowIntercept = calculateIntercept(secondThrowX, secondThrowZ, secondThrowSlope);
+
+        // Calculating output data
         double[] strongholdXZ = calculateIntersection(firstThrowSlope, firstThrowIntercept, secondThrowSlope, secondThrowIntercept);
-        return strongholdXZ;
+        double[] finalResult = Arrays.copyOf(strongholdXZ, 3);
+        finalResult[2] = calculateDegreeCertainty(firstThrowSlope, secondThrowSlope);
+
+        return finalResult;
     }
 
     // Calculate slope of a line
@@ -50,7 +69,7 @@ public class CartesianCalculator {
     // Calculate intercept of a line
     public static double calculateIntercept(double firstX, double firstY, double slope) {
         double operator = firstX * slope;
-        operator = round(operator, 2);
+        operator = round(operator, 0);
         double result = firstY - operator;
 
         return result;
@@ -79,7 +98,7 @@ public class CartesianCalculator {
         double strongholdY = (firstLine[0] * strongholdX) + firstLine[1];
         strongholdY = round(strongholdY, 2);
 
-        // Returning interception
+        // Returning intersection
         double[] result = new double[2];
         result[0] = strongholdX;
         result[1] = strongholdY;

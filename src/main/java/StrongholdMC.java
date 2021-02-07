@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javafx.stage.WindowEvent;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -161,6 +163,18 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         GlobalScreen.addNativeKeyListener(this);
 
 
+        // Unhook key listening on application close
+        window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                try {
+                    GlobalScreen.unregisterNativeHook();
+                } catch (NativeHookException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
         // Finalizing
         borderPane.setCenter(vbox1);
         Scene scene = new Scene(borderPane);
@@ -186,17 +200,6 @@ public class StrongholdMC extends Application implements NativeKeyListener {
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
-        // Disable tracking keys
-        if (e.getKeyCode() == NativeKeyEvent.VC_P) {
-            if (pressedF3 = true) {
-                try {
-                    GlobalScreen.unregisterNativeHook();
-                } catch (NativeHookException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-
         if (e.getKeyCode() == NativeKeyEvent.VC_F3) {
             this.pressedF3 = true;
         }
@@ -212,30 +215,40 @@ public class StrongholdMC extends Application implements NativeKeyListener {
                         textFields.get(globalCounter).setText(toPaste[0] + "," + toPaste[1]);
 
                         if (globalCounter == 3) {
+                            // Get data
                             String firstData = firstThrowInput.getText();
                             String firstDataEye = firstThrowInputEye.getText();
                             String secondData = secondThrowInput.getText();
                             String secondDataEye = secondThrowInputEye.getText();
 
+                            // Calculate stronghold location
                             double[] strongholdLocation = calculator.calculateStronghold(firstData, firstDataEye, secondData, secondDataEye);
                             int res1 = (int) Math.round(strongholdLocation[0]);
                             int res2 = (int) Math.round(strongholdLocation[1]);
-                            resultText.setText(res1 + " 0 " + res2);
 
+                            // Calculate angle of intersection
                             int resultDeg = (int) Math.round(strongholdLocation[2]);
-                            resultCertaintyDeg.setText("" + resultDeg + " degrees");
 
+                            // Calculate blocks away
                             int resultBlocks = (int) Math.round(calculator.calculateBlocksAway(secondDataEye, strongholdLocation[0], strongholdLocation[1]));
+
+                            // Paste results
+                            resultText.setText(res1 + " 0 " + res2);
+                            resultCertaintyDeg.setText("" + resultDeg + " degrees");
                             resultBlocksAway.setText("" + resultBlocks + " blocks away");
 
+                            // Clean fields
                             for (TextField placeholder : textFields) {
                                 placeholder.setText("");
                             }
-
-                            globalCounter = -1;
                         }
 
-                        globalCounter++;
+                        // Iterate input field counter
+                        if (globalCounter == 3) {
+                            globalCounter = 0;
+                        } else {
+                            globalCounter++;
+                        }
 
                     } catch (Exception exp) {
                         System.out.println("Error");

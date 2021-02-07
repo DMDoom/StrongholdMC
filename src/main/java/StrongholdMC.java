@@ -31,6 +31,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
 
     private Text resultText;
     private Text resultCertaintyDeg;
+    private Text resultBlocksAway;
 
     private boolean pressedF3;
 
@@ -112,16 +113,22 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         resultText.setFont(coordFont);
         resultText.setFill(Color.WHITESMOKE);
         TextFlow resultTextFlow = new TextFlow();
-        resultTextFlow.setPadding(new Insets(85,0,0,0));
+        resultTextFlow.setPadding(new Insets(72,0,0,0));
         resultTextFlow.getChildren().add(resultText);
         resultTextFlow.setTextAlignment(TextAlignment.CENTER);
 
-        resultCertaintyDeg = new Text("");
+        resultCertaintyDeg = new Text("0");
         resultCertaintyDeg.setFont(degreeCert);
         resultCertaintyDeg.setFill(Color.WHITESMOKE);
-        TextFlow resultCertaintyDegFlow = new TextFlow();
-        resultCertaintyDegFlow.getChildren().add(resultCertaintyDeg);
-        resultCertaintyDegFlow.setTextAlignment(TextAlignment.CENTER);
+        resultBlocksAway = new Text("0");
+        resultBlocksAway.setFont(degreeCert);
+        resultBlocksAway.setFill(Color.WHITESMOKE);
+
+        HBox belowCoordsData = new HBox();
+        belowCoordsData.getChildren().add(resultCertaintyDeg);
+        belowCoordsData.getChildren().add(resultBlocksAway);
+        belowCoordsData.setAlignment(Pos.CENTER);
+        belowCoordsData.setSpacing(20);
 
 
         // Initializing and adding to container
@@ -133,7 +140,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         vbox1.getChildren().add(textFlowSecond);
         vbox1.getChildren().add(secondData);
         vbox1.getChildren().add(resultTextFlow);
-        vbox1.getChildren().add(resultCertaintyDegFlow);
+        vbox1.getChildren().add(belowCoordsData);
         vbox1.setAlignment(Pos.TOP_CENTER);
 
 
@@ -211,10 +218,15 @@ public class StrongholdMC extends Application implements NativeKeyListener {
                             String secondDataEye = secondThrowInputEye.getText();
 
                             double[] strongholdLocation = calculator.calculateStronghold(firstData, firstDataEye, secondData, secondDataEye);
-                            resultText.setText(strongholdLocation[0] + " 0 " + strongholdLocation[1]);
+                            int res1 = (int) Math.round(strongholdLocation[0]);
+                            int res2 = (int) Math.round(strongholdLocation[1]);
+                            resultText.setText(res1 + " 0 " + res2);
 
                             int resultDeg = (int) Math.round(strongholdLocation[2]);
                             resultCertaintyDeg.setText("" + resultDeg + " degrees");
+
+                            int resultBlocks = (int) Math.round(calculator.calculateBlocksAway(secondDataEye, strongholdLocation[0], strongholdLocation[1]));
+                            resultBlocksAway.setText("" + resultBlocks + " blocks away");
 
                             for (TextField placeholder : textFields) {
                                 placeholder.setText("");

@@ -11,6 +11,7 @@ public class CartesianCalculator {
     //The variables x1, z1, and θ1 are the X, Z, and cartesian angle for point 1, and x2, z2, and θ2 are the same for point 2.
     //We are looking for point (x3, z3). Make sure you calculator is using degrees, not radians!
 
+    // Calculates degrees at which the lines intersect
     public static double calculateDegreeCertainty(double firstSlope, double secondSlope) {
         double top = firstSlope - secondSlope;
         double bottom = 1 + (firstSlope * secondSlope);
@@ -22,6 +23,19 @@ public class CartesianCalculator {
         double roundedFinal = round(result, 2);
 
         return roundedFinal;
+    }
+
+    // Calculates distance to the stronghold
+    public static double calculateBlocksAway(String secondThrowEye, double strongholdX, double strongholdZ) {
+        String[] secondThrowDataEye = secondThrowEye.split(",");
+        double secondThrowEyeX = Double.valueOf(secondThrowDataEye[0]);
+        double secondThrowEyeZ = Double.valueOf(secondThrowDataEye[1]);
+
+        double diffX = Math.abs(secondThrowEyeX - strongholdX);
+        double diffZ = Math.abs(secondThrowEyeZ - strongholdZ);
+
+        double result = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffZ, 2));
+        return result;
     }
 
     // Calculate all
@@ -57,11 +71,8 @@ public class CartesianCalculator {
     // Calculate slope of a line
     public static double calculateSlope(double firstX, double firstY, double secondX, double secondY) {
         double top = firstY - secondY;
-        top = round(top, 2);
         double bottom = firstX - secondX;
-        bottom = round(bottom, 2);
         double result = top / bottom; // WILL THROW ERROR ON UNDEFINED SLOPE (if there is no slope, vertical line)
-        result = round(result, 2);
 
         return result;
     }
@@ -69,7 +80,6 @@ public class CartesianCalculator {
     // Calculate intercept of a line
     public static double calculateIntercept(double firstX, double firstY, double slope) {
         double operator = firstX * slope;
-        operator = round(operator, 0);
         double result = firstY - operator;
 
         return result;
@@ -88,14 +98,14 @@ public class CartesianCalculator {
 
         // Calculate X
         double finalX = firstLine[0] + (secondLine[0] * (-1));
-        finalX = round(finalX, 2);
         double finalNumeric = secondLine[1] + (firstLine[1] * (-1));
-        finalNumeric = round(finalNumeric, 2);
         double strongholdX = finalNumeric / finalX;
-        strongholdX = round(strongholdX, 2);
 
         // Calculate Y
         double strongholdY = (firstLine[0] * strongholdX) + firstLine[1];
+
+        // Rounding
+        strongholdX = round(strongholdX, 2);
         strongholdY = round(strongholdY, 2);
 
         // Returning intersection

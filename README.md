@@ -27,6 +27,9 @@ StrongholdMC is not allowed in official speedruns and using it may result in you
 - throw about 500-1000 blocks away from the origin point, measure, walk 50 blocks to the side, measure again, and it should pinpoint the chunk of the stronghold. If you want to make sure, throw once again while at the presumed stronghold location. This takes 3 eye throws to do, 4 if you want to be sure at the destination.
 - throw upon exiting the portal, which you would do anyways, and measure. Then, upon travelling 500-100 blocks, walk some blocks to the side of your path, measure again. Again, this should pinpoint the location, but pay attention to the degrees of intersection in case you somehow lost track while travelling and took the second measurement at near perpendicular angle. This takes 2 eye throws to do, 3 if you want to be sure at the destination.
 
+### How does it work
+StrongholdMC utilizes coordinate geometry to locate the stronghold in the process called triangulation, meaning the process of determining the location of a point by forming triangles to it from known points. The program calculates the slope of each line based on four coordinates taken as input (first throw XZ and location of the eye XZ, and second throw XZ and location of the eye XZ). Then, given slope, it calculates intercept of each line, meaning the point at which each line crosses and y-axis. Lastly, it takes both line equations to calculate the locaion of the line. Simple equations are added to calculate angle at which the lines intersect and the number of blocks away from last known location. In order to automate the measurement process, due to limitations of Java, JNativeHook is used to scan for keyboard input. On F3 + C, Minecraft will copy the location of the player to clipboard, and StrongholdMC will automatically copy the contents of clipboard as input.
+
 
 ### TODO:
 - Add fat jar download

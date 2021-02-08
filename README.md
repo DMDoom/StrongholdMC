@@ -4,7 +4,8 @@
 
 This application takes four measurements in-game as input and calculates estimated position of the stronghold in the process known as triangulation. 
 To make it convenient, the app scans for keyboard input to automatically paste coordinates upon copying them using F3 + C command in-game.
-Given minecraft's limitation, StrongholdMC is very accurate; at ~1500 blocks distance and ~100 block walk away from the first throw, it can pinpoint the location of the stronghold chunk to which the eye points to.
+StrongholdMC also introduces a toggable in-game overlay to display results live without the need for a second monitor or an alt-tab to see the results.
+Given minecraft's limitation, this program is very accurate; at ~1500 blocks distance and ~100 block walk away from the first throw, it can pinpoint the location of the stronghold chunk to which the eye points to.
 As it currently stands, being external software,
 StrongholdMC is not allowed in official speedruns and using it may result in your run being invalidated or a ban.
 
@@ -34,3 +35,4 @@ StrongholdMC utilizes coordinate geometry to locate the stronghold in the proces
 ### TODO:
 - Add fat jar download
 - Clean the code
+- Credits

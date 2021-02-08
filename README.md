@@ -10,11 +10,11 @@ As it currently stands, being external software,
 StrongholdMC is not allowed in official speedruns and using it may result in your run being invalidated or a ban.
 
 ### How to use
-1. Launch the app
+1. Launch the app (toggle overlay if you want)
 2. Press F3 + C while in game, throw a pearl, walk in the direction of the pearl, press F3 + C again
 3. Walk a number of blocks away (the further away you are from the stronghold, the more you should walk for accurate measurement)
 4. Repeat step 2
-5. The app should by now show coordinates of the stronghold
+5. The program should then display the results (coordinates of the stronghold, angle of line intersection, amount of blocks away)
 
 ### Optimal usage recommendations
 - **when measuring, focus your crosshair on the middle of the eye and don't move it while walking forward; it's enough for walk for 3 blocks or so for accurate measurements**

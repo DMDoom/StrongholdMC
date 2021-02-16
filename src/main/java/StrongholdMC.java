@@ -55,8 +55,8 @@ public class StrongholdMC extends Application implements NativeKeyListener {
     protected static Pane pane;
     private static boolean redraw;
 
-    // TODO
-    private static double[] previousResult;
+    private static int[] previousResult;
+    private static boolean previousResultExists;
 
     private boolean pressedF3;
 
@@ -73,7 +73,9 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         pressedF3 = false;
         textFields = new ArrayList<>();
         calculator = new CartesianCalculator();
-        previousResult = new double[4];
+        previousResult = new int[4];
+        previousResultExists = false;
+
 
 
         // Determine window style
@@ -88,14 +90,14 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         window.setAlwaysOnTop(true);
 
 
+
         // Loading resources
         FileInputStream backgroundStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\bg2.png");
         FileInputStream fontStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
         FileInputStream strongholdStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
         FileInputStream degreeStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
-        // Add later
         overlayMainStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
-        // FileInputStream overlaySubStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
+
 
 
         // Main application background
@@ -106,11 +108,13 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         borderPane.setBackground(new Background(myBI));
 
 
+
         // Fonts
         Font bgFont = Font.loadFont(fontStream, 24);
         Font coordFont = Font.loadFont(strongholdStream, 40);
         Font degreeCert = Font.loadFont(degreeStream, 24);
         overlayFont = Font.loadFont(overlayMainStream, 14);
+
 
 
         // Main application stage
@@ -174,6 +178,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         buttons.setSpacing(20);
 
 
+
         // Main stage container
         VBox vbox1 = new VBox();
         vbox1.setPadding(new Insets(50, 0, 0 , 0));
@@ -188,11 +193,13 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         vbox1.setAlignment(Pos.TOP_CENTER);
 
 
+
         // Adding text fields to a list used to iterate inputs
         textFields.add(firstThrowInput);
         textFields.add(firstThrowInputEye);
         textFields.add(secondThrowInput);
         textFields.add(secondThrowInputEye);
+
 
 
         // Program stage finalizing
@@ -201,6 +208,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         window.setScene(sceneApp);
         window.setTitle("StrongholdMC");
         window.show();
+
 
 
         // Event handling
@@ -263,6 +271,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
                         stage.show();
                     } catch (Exception exc) {
                         System.out.println("Error while attaching");
+                        System.out.println(exc.getStackTrace());
                     }
                 }
             }
@@ -299,14 +308,19 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         scene = new Scene(pane, GHTools.getGameWidth(), GHTools.getGameHeight());
         System.out.println((GHTools.getGameWidth()-6)+"x"+(GHTools.getGameHeight()-31));
         stage.setTitle("MENU_OVERLAY");
-
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
         pane.setStyle("-fx-background-color: rgba(255, 255, 255, 0);");
         stage.setAlwaysOnTop(true);
 
-        header = new Label("OVERLAY ACTIVE");
-        line1 = new Label("0 blocks away 0 degrees");
+        // Don't delete results on overlay toggle
+        if (previousResultExists = true) {
+            header = new Label(previousResult[0] + " 0 " + previousResult[1]);
+            line1 = new Label(previousResult[2] + " blocks away, " + previousResult[3] + " degrees");
+        } else {
+            header = new Label("OVERLAY ACTIVE");
+            line1 = new Label("0 blocks away 0 degrees");
+        }
 
         pane.getChildren().add(header);
         pane.getChildren().add(line1);
@@ -378,6 +392,13 @@ public class StrongholdMC extends Application implements NativeKeyListener {
                             resultText.setText(res1 + " 0 " + res2);
                             resultCertaintyDeg.setText("" + resultDeg + " degrees");
                             resultBlocksAway.setText("" + resultBlocks + " blocks away");
+
+                            // Save results
+                            previousResult[0] = res1;
+                            previousResult[1] = res2;
+                            previousResult[2] = resultBlocks;
+                            previousResult[3] = resultDeg;
+                            previousResultExists = true;
 
                             // Update overlay if attached (no other way to do this)
                             if (attached == true) {

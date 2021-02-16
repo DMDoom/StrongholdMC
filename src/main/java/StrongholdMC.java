@@ -1,7 +1,5 @@
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -30,12 +28,9 @@ import java.awt.datatransfer.DataFlavor;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
-// Add overlay in-game
 import com.guidedhacking.GHArchitecture;
-import com.guidedhacking.GHInput;
 import com.guidedhacking.GHMemory;
 import com.guidedhacking.GHTools;
-import com.sun.glass.events.KeyEvent;
 
 
 public class StrongholdMC extends Application implements NativeKeyListener {
@@ -53,10 +48,15 @@ public class StrongholdMC extends Application implements NativeKeyListener {
 
     private static Label header;
     private static Label line1;
+    private static Font overlayFont;
+    private static FileInputStream overlayMainStream;
     static Scene scene;
     static Stage stage;
     protected static Pane pane;
     private static boolean redraw;
+
+    // TODO
+    private static double[] previousResult;
 
     private boolean pressedF3;
 
@@ -73,6 +73,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         pressedF3 = false;
         textFields = new ArrayList<>();
         calculator = new CartesianCalculator();
+        previousResult = new double[4];
 
 
         // Determine window style
@@ -93,7 +94,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         FileInputStream strongholdStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
         FileInputStream degreeStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
         // Add later
-        // FileInputStream overlayMainStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
+        overlayMainStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
         // FileInputStream overlaySubStream = new FileInputStream("C:\\Users\\48606\\IdeaProjects\\StrongholdMC\\src\\main\\resources\\fonts\\MinecraftRegular.otf");
 
 
@@ -105,11 +106,14 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         borderPane.setBackground(new Background(myBI));
 
 
-        // Main application stage
+        // Fonts
         Font bgFont = Font.loadFont(fontStream, 24);
         Font coordFont = Font.loadFont(strongholdStream, 40);
         Font degreeCert = Font.loadFont(degreeStream, 24);
+        overlayFont = Font.loadFont(overlayMainStream, 14);
 
+
+        // Main application stage
         Text firstThrowText = new Text("First throw and pearl XZ");
         firstThrowText.setFont(bgFont);
         firstThrowText.setFill(Color.WHITESMOKE);
@@ -199,7 +203,7 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         window.show();
 
 
-        // EVENT HANDLING BELOW
+        // Event handling
         // Hook key listener
         try {
             GlobalScreen.registerNativeHook();
@@ -208,7 +212,6 @@ public class StrongholdMC extends Application implements NativeKeyListener {
             System.exit(1);
         }
         GlobalScreen.addNativeKeyListener(this);
-
 
         // Unhook key listening on application close
         window.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -240,7 +243,6 @@ public class StrongholdMC extends Application implements NativeKeyListener {
             }
         });
 
-
         // Toggle overlay button event
         toggleOverlay.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
@@ -265,7 +267,6 @@ public class StrongholdMC extends Application implements NativeKeyListener {
                 }
             }
         });
-
 
         // Update overlay on window resize
         AnimationTimer updater = new AnimationTimer(){
@@ -314,6 +315,9 @@ public class StrongholdMC extends Application implements NativeKeyListener {
         line1.setLayoutX(30);
         header.setLayoutY(30);
         line1.setLayoutY(60);
+
+        header.setFont(overlayFont);
+        line1.setFont(overlayFont);
 
         header.setTextFill(Color.WHITESMOKE);
         line1.setTextFill(Color.WHITESMOKE);

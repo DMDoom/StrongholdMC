@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class CartesianCalculator {
 
-    //For future improvements (currently impossible)
+    //For possible future improvements (currently impossible with the way Minecraft records position data)
     //Cartesian angle = Minecraft angle + 90 degrees
     //x3 = ((z1 - z2) + x2tan(θ2) - x1tan(θ1)) / (tan(θ2) - tan(θ1))
     //z3 = ((z1tan(θ2) - z2tan(θ1)) + (x2 - x1) * tan(θ2) * tan(θ1)) / (tan(θ2) - tan(θ1))
@@ -70,11 +70,8 @@ public class CartesianCalculator {
 
     // Calculate slope of a line
     public static double calculateSlope(double firstX, double firstY, double secondX, double secondY) {
-        double top = firstY - secondY;
-        double bottom = firstX - secondX;
-        double result = top / bottom; // WILL THROW ERROR ON UNDEFINED SLOPE (if there is no slope, vertical line)
-
-        return result;
+        // Will throw error on undefined slope (if there is no slope, vertical line)
+        return (firstY - secondY) / (firstX - secondX);
     }
 
     // Calculate intercept of a line
@@ -123,6 +120,5 @@ public class CartesianCalculator {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
 }
 

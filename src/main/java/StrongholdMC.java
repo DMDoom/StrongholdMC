@@ -32,7 +32,6 @@ import com.guidedhacking.GHArchitecture;
 import com.guidedhacking.GHMemory;
 import com.guidedhacking.GHTools;
 
-
 public class StrongholdMC extends Application implements NativeKeyListener {
 
     private static boolean attached;

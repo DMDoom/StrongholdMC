@@ -22,7 +22,10 @@ StrongholdMC is not allowed in official speedruns and using it may result in you
 ### How does it work
 StrongholdMC utilizes coordinate geometry to locate the stronghold in the process called triangulation, meaning the process of determining the location of a point by forming triangles to it from known points. The script calculates the slope of two lines based on four coordinates taken as input (first throw XZ and eye XZ, and second throw XZ and eye XZ). Then, given slope, it calculates intercept of each line, meaning the point at which each line crosses the y-axis. Finally, given line equations (expressed as e.g. y = 3x-3 and y = 2.3x+4), the script calculates their point of intersection, angle of intersection, and the number of blocks away from the player. Due to limitations of Java, [JNativeHook](https://github.com/kwhat/jnativehook) is used to scan for keyboard input, and [GHTools](https://github.com/Erarnitox/java-game-hacking) is used display the overlay over the game's window.
 
+### Dependencies
+- [Java Native Access Platform](https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform)
+- [JNativeHook](https://github.com/kwhat/jnativehook)
+- [GHTools](https://github.com/Erarnitox/java-game-hacking)
+
 ### TODO:
 - Fat jar download
-- Clean the code
-- Credits
